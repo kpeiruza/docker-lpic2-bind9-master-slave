@@ -12,5 +12,5 @@
 
 Once started, you can check the DNS resolution with host or dig pointing to the container's IP:
 
-Master IP: docker inspect bindmaster -f '{{ .NetworkSettings.IPAddress }}'
-Slave IP: docker inspect bindslave -f '{{ .NetworkSettings.IPAddress }}'
+- Master IP: docker inspect bindmaster -f '{{ .NetworkSettings.IPAddress }}'
+- Slave IP: docker inspect bindslave -f '{{ .NetworkSettings.IPAddress }}'
