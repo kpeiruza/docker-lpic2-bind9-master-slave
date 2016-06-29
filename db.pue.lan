@@ -1,0 +1,24 @@
+$TTL	604800
+@	IN	SOA	ns.pue.lan. kenneth.floss.cat. (
+			2016062900 	; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	ns1
+@	IN	NS	ns2.pue.lan.
+@	IN	MX 1	mail
+@	IN	A	10.10.10.20
+ns1	IN	A	10.10.10.20
+; poned mi IP de ns2
+ns2	IN	A	10.10.10.20
+mail	IN	A	10.10.10.20
+server1	IN	A	10.10.10.21
+server2	IN	A	10.10.10.22
+server3	IN	A	11.10.10.23
+www	IN	CNAME	server1
+*	IN	CNAME	server1
+intranet IN	CNAME	server2
+training	IN	CNAME	server3
+@	IN	TXT	"This is a simple text message"
