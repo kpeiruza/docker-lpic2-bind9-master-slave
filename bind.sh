@@ -5,11 +5,23 @@ configCore="/etc/bind/named.conf"
 configCustom="/etc/bind/named.conf.local"
 
 function initTSIG {
-
+	echo "Creating TSIG Configuration"
+#	ACL defining ranges where we want to use our TSIG key
+#	We define 172.16.0.0/12; here as all IP's assigned by default
+#	by docker will probably be inside 172.17.X.Y or 172.18.X.Y
 	echo 'acl remotepeers {
-	172.16.0.0/12;
-	BIND_MASTER_IP
-	BIND_SLAVE_IP
+	172.16.0.0/12;' >> $configCustom
+#	Additional IPs just in case they were defined
+	if [ -n "$BIND_MASTER_IP" ]
+	then
+		echo "$BIND_MASTER_IP;" >> $configCustom
+	fi
+	if [ -n "$BIND_SLAVE_IP" ]
+	then
+		echo "$BIND_SLAVE_IP;" >> $configCustom
+	fi
+#	End of TSIG stuff after next echo
+	echo '
 };
 
 key "interconecta" {
@@ -21,8 +33,7 @@ server remotepeers {
 	keys { interconecta; };
 };
 
-' | sed -e "s/BIND_SLAVE_IP/$BIND_SLAVE_IP;/g" -e "s/BIND_MASTER_IP/$BIND_MASTER_IP;/g" >> $configCustom
-
+' | sed -e "s/BIND_SLAVE_IP;/$BIND_SLAVE_IP;/g" -e "s/BIND_MASTER_IP;/$BIND_MASTER_IP;/g" | grep -v "^\t;$" >> $configCustom
 
 }
 
