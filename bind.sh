@@ -36,8 +36,14 @@ function initMasterZones {
 		then
 			exit 1;
 		else
-#			echo -e "zone \"$domain\" {\n\ttype master;\n\tfile \"/etc/bind/zones/$domain\";\n\tallow-transfer { $BIND_SLAVE_IP; };\n};\n\n" >> $configCustom
-			echo -e "zone \"$domain\" {\n\ttype master;\n\tfile \"/etc/bind/zones/$domain\";\n\tallow-transfer { key interconecta; };\n};\n\n" >> $configCustom
+			if [ -n "$BIND_SLAVE_IP" ]
+			then
+#	IP AUTH MODE
+				echo -e "zone \"$domain\" {\n\ttype master;\n\tfile \"/etc/bind/zones/$domain\";\n\tallow-transfer { $BIND_SLAVE_IP; };\n};\n\n" >> $configCustom
+			else
+#	TSIG AUTH MODE
+				echo -e "zone \"$domain\" {\n\ttype master;\n\tfile \"/etc/bind/zones/$domain\";\n\tallow-transfer { key interconecta; };\n};\n\n" >> $configCustom
+			fi
 		fi
 	done
 
@@ -53,17 +59,17 @@ function initSlaveZones {
 
 }
 
-	if [ "$BIND_MASTER" = "true" -a -n "$BIND_SLAVE_IP" ]
-	then
-		initTSIG
-		initMasterZones
-	elif [ -n "$BIND_MASTER_IP" ]
-	then
-		initTSIG
-		initSlaveZones
-	else
-		echo "Missing required variables: BIND_MASTER==true+BIND_SLAVE_IP for master or BIND_MASTER_IP for slave"
-		exit 1
-	fi
+if [ "$BIND_MASTER" = "true" ]
+then
+	initTSIG
+	initMasterZones
+elif [ -n "$BIND_MASTER_IP" ]
+then
+	initTSIG
+	initSlaveZones
+else
+	echo "Missing required variables: BIND_MASTER==true+BIND_SLAVE_IP for master or BIND_MASTER_IP for slave"
+	exit 1
+fi
 
-	/usr/sbin/named -c $configCore -4 -g
+/usr/sbin/named -c $configCore -4 -g
