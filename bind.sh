@@ -1,4 +1,5 @@
 #!/bin/bash
+#	GPL, of course, 
 #	Main config file when calling named
 configCore="/etc/bind/named.conf"
 #	Where to write TSIG and zones configuration
