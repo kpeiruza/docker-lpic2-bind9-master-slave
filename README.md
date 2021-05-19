@@ -9,7 +9,7 @@
 	Suggestion for testing: set 172.16.0.0/12 as BIND_SLAVE_IP so any container in the default docker network will be able to perform zone transfers.
 
 *Run the slave:*
-- docker run -ti --name bindslave -e BIND_MASTER_IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' bindmaster) -v /path/to/your/zones/folder:/etc/bind/zones kpeiruza/lpic2-bind9-master-slave 
+- docker run -ti --name bindslave -e BIND_MASTER=false -e BIND_MASTER_IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' bindmaster) -v /path/to/your/zones/folder:/etc/bind/zones kpeiruza/lpic2-bind9-master-slave 
 
 Once started, you can check the DNS resolution with host or dig pointing to the container's IP:
 
