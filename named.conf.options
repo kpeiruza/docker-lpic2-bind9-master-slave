@@ -21,7 +21,8 @@ options {
 	//========================================================================
 	dnssec-validation no;
 //	Whom do we allow to resolve 3rd party domains to us. Needs zone ".".
-	allow-recursion { ::1;127.0.0.1;};
+        recursion yes;
+        allow-recursion { ::1; 127.0.0.1; 10.0.0.0/8; 172.16.0.0/12; 192.168.0.0/16; };
 //	We close AXFR by default. Here you could list all your secondary DNS IPs
 	allow-transfer { none; };
 
